@@ -1,0 +1,30 @@
+name: CI - Run Tests
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies (Poetry)
+        run: |
+          pip install --upgrade pip
+          pip install uv
+          uv sync
+
+      - name: Run Tests
+        run: |
+          uv run pytest --maxfail=1
